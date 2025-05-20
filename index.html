@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificador de Fake News</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Verificador de Fake News</h1>
+        
+        <div class="painel painel-principal">
+            <div class="grupo-busca">
+                <input type="text" id="fraseInput" placeholder="Digite uma afirmação para verificar...">
+                <div class="botoes">
+                    <button onclick="verificador.verificarFrase()">Verificar</button>
+                    <button onclick="verificador.mostrarHistorico()">Histórico</button>
+                    <button onclick="verificador.limparHistorico()">Limpar</button>
+                </div>
+            </div>
+            
+            <div id="frasesRecentes" class="frases-recentes"></div>
+            
+            <div id="resultado" class="resultado"></div>
+            
+            <div id="noticias" class="noticias-relacionadas"></div>
+        </div>
+        
+        <div class="painel painel-historico">
+            <h2>Histórico de Verificações</h2>
+            <div id="historico"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Inicializa o verificador quando a página carrega
+        const verificador = new VerificadorFakeNews();
+    </script>
+</body>
+</html>
