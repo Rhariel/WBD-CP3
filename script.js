@@ -1,11 +1,22 @@
-// Versão 2.0 - Verificador de Fake News Avançado
+
 class VerificadorFakeNews {
   constructor() {
     this.frasesBase = [
-      // Base local aumentada com mais exemplos
       { frase: "Vacina causa autismo", status: "Fake", fonte: "OMS" },
       { frase: "Terra é plana", status: "Fake", fonte: "NASA" },
-      // ... (outras frases base)
+      { frase: "5G espalha COVID-19", status: "Fake" },
+      { frase: "Cloroquina cura COVID-19", status: "Fake" },
+      { frase: "Máscaras ajudam a prevenir doenças respiratórias", status: "Verdadeiro" },
+      { frase: "Vacinas salvam vidas", status: "Verdadeiro" },
+      { frase: "O desmatamento afeta o clima", status: "Verdadeiro" },
+      { frase: "O aquecimento global é causado por humanos", status: "Verdadeiro" },
+      { frase: "COVID-19 foi criado em laboratório como arma biológica", status: "Fake" },
+      { frase: "Lavar as mãos previne infecções", status: "Verdadeiro" },
+      { frase: "Alimentos alcalinos curam câncer", status: "Fake" },
+      { frase: "Exercícios físicos melhoram a saúde", status: "Verdadeiro" },
+      { frase: "Hidroxicloroquina é eficaz contra COVID-19", status: "Fake" },
+      { frase: "Meditação reduz estresse", status: "Verdadeiro" },
+
     ];
     
     this.historico = JSON.parse(localStorage.getItem("historico")) || [];
@@ -18,11 +29,10 @@ class VerificadorFakeNews {
     this.historicoDiv = document.getElementById("historico");
     this.frasesRecentesDiv = document.getElementById("frasesRecentes");
     
-    // Carrega frases recentes ao iniciar
     this.mostrarFrasesRecentes();
+    this.mostrarHistorico();
   }
 
-  // Função principal com fluxo otimizado
   async verificarFrase() {
     const fraseInput = document.getElementById("fraseInput").value.trim();
     
@@ -34,7 +44,6 @@ class VerificadorFakeNews {
     }
 
     try {
-      // 1. Verificação local rápida
       const resultadoLocal = this.verificarLocalmente(fraseInput);
       if (resultadoLocal) {
         this.exibirResultado(resultadoLocal);
@@ -42,12 +51,10 @@ class VerificadorFakeNews {
         return;
       }
       
-      // 2. Consulta à API
       const resultadoAPI = await this.verificarNaAPI(fraseInput);
       this.exibirResultado(resultadoAPI);
       this.registrarHistorico(fraseInput, resultadoAPI);
       
-      // 3. Atualiza frases recentes
       this.mostrarFrasesRecentes();
       
     } catch (error) {
@@ -55,7 +62,6 @@ class VerificadorFakeNews {
     }
   }
 
-  // Métodos auxiliares
   verificarLocalmente(frase) {
     const encontrada = this.frasesBase.find(item => 
       item.frase.toLowerCase() === frase.toLowerCase()
@@ -69,7 +75,6 @@ class VerificadorFakeNews {
   async verificarNaAPI(frase) {
     this.mostrarCarregamento();
     
-    // Remove caracteres especiais que podem causar erro na API
     const fraseSanitizada = frase.replace(/[^\w\sÀ-ÿ]/gi, '');
     const apiUrl = `https://gnews.io/api/v4/search?q=${encodeURIComponent(fraseSanitizada)}&lang=pt&apikey=665039f151bf02aa711addfd929c5be5`;
     const response = await fetch(apiUrl);
@@ -87,7 +92,6 @@ class VerificadorFakeNews {
   }
 
   analisarConteudo(articles) {
-    // Implementação mais sofisticada com pontuação
     let score = 0;
     const fakeTerms = ['fake', 'falso', 'boato', 'desmentido'];
     const trueTerms = ['comprovado', 'estudo', 'científico'];
@@ -106,7 +110,6 @@ class VerificadorFakeNews {
     };
   }
 
-  // Métodos de exibição
   exibirResultado({status, fonte, artigos}) {
     const templates = {
       Fake: {
@@ -151,8 +154,6 @@ class VerificadorFakeNews {
       </div>
     `;
   }
-
-  // Gerenciamento de histórico
   registrarHistorico(frase, resultado) {
     const entrada = {
       frase,
@@ -164,6 +165,7 @@ class VerificadorFakeNews {
     
     this.historico.unshift(entrada);
     localStorage.setItem("historico", JSON.stringify(this.historico));
+    this.mostrarHistorico();
   }
 
   mostrarHistorico() {
@@ -205,7 +207,6 @@ class VerificadorFakeNews {
       : '';
   }
 
-  // Utilitários
   mostrarCarregamento() {
     this.resultadoDiv.innerHTML = '<div class="carregando"><p>🔍 Analisando informações...</p></div>';
     this.noticiasDiv.innerHTML = '<p class="carregando">Buscando notícias relacionadas...</p>';
@@ -248,10 +249,8 @@ class VerificadorFakeNews {
   }
 }
 
-// Inicialização
 const verificador = new VerificadorFakeNews();
 
-// Atalhos globais (para uso no HTML)
 function verificarFrase() { verificador.verificarFrase(); }
 function mostrarHistorico() { verificador.mostrarHistorico(); }
 function limparHistorico() { verificador.limparHistorico(); }
