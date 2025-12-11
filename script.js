@@ -17,6 +17,7 @@ class VerificadorFakeNews {
       { frase: "Hidroxicloroquina é eficaz contra COVID-19", status: "Fake" },
       { frase: "Meditação reduz estresse", status: "Verdadeiro" },
 
+
     ];
     
     this.historico = JSON.parse(localStorage.getItem("historico")) || [];
